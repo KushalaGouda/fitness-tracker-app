@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fitness Tracker</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            💪 Fitness Tracker
+        </div>
+
+        <div class="nav-links">
+
+            <a href="index.html">Dashboard</a>
+
+            <a href="add-activity.html">Add Activity</a>
+
+            <a href="progress.html">Progress</a>
+
+            <a href="history.html">History</a>
+
+            <a href="profile.html">Profile</a>
+
+            <!-- Logout Button -->
+
+            <button
+                id="logoutBtn"
+                class="logout-button">
+                Logout
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Main Dashboard -->
+
+    <main class="dashboard">
+
+
+        <!-- Welcome -->
+
+        <div class="welcome">
+
+            <h1>
+                Welcome Back,
+                <span id="dashboardUserName">User</span>! 👋
+            </h1>
+
+            <p>
+                Track your fitness and stay healthy every day.
+            </p>
+
+        </div>
+
+
+        <!-- Summary Cards -->
+
+        <section class="summary-cards">
+
+
+            <!-- Steps -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    👟
+                </div>
+
+                <h3>
+                    Steps
+                </h3>
+
+                <h2 id="dashboardSteps">
+                    0
+                </h2>
+
+                <p id="dashboardStepGoal">
+                    Goal: 0
+                </p>
+
+            </div>
+
+
+            <!-- Calories -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🔥
+                </div>
+
+                <h3>
+                    Calories
+                </h3>
+
+                <h2 id="dashboardCalories">
+                    0 kcal
+                </h2>
+
+                <p id="dashboardCalorieGoal">
+                    Goal: 0 kcal
+                </p>
+
+            </div>
+
+
+            <!-- Workout -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🏃
+                </div>
+
+                <h3>
+                    Workout
+                </h3>
+
+                <h2 id="dashboardWorkout">
+                    0 min
+                </h2>
+
+                <p id="dashboardWorkoutGoal">
+                    Goal: 0 min
+                </p>
+
+            </div>
+
+
+            <!-- Water -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    💧
+                </div>
+
+                <h3>
+                    Water
+                </h3>
+
+                <h2 id="dashboardWater">
+                    0 L
+                </h2>
+
+                <p id="dashboardWaterGoal">
+                    Goal: 0 L
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Today's Progress -->
+
+        <section class="progress-section">
+
+            <h2>
+                Today's Progress
+            </h2>
+
+
+            <!-- Steps Progress -->
+
+            <div class="progress-item">
+
+                <div class="progress-label">
+
+                    <span>
+                        Steps
+                    </span>
+
+                    <span id="stepsPercentage">
+                        0%
+                    </span>
+
+                </div>
+
+                <div class="progress-bar">
+
+                    <div
+                        class="progress-fill steps"
+                        id="stepsProgressBar">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Calories Progress -->
+
+            <div class="progress-item">
+
+                <div class="progress-label">
+
+                    <span>
+                        Calories
+                    </span>
+
+                    <span id="caloriesPercentage">
+                        0%
+                    </span>
+
+                </div>
+
+                <div class="progress-bar">
+
+                    <div
+                        class="progress-fill calories"
+                        id="caloriesProgressBar">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Workout Progress -->
+
+            <div class="progress-item">
+
+                <div class="progress-label">
+
+                    <span>
+                        Workout
+                    </span>
+
+                    <span id="workoutPercentage">
+                        0%
+                    </span>
+
+                </div>
+
+                <div class="progress-bar">
+
+                    <div
+                        class="progress-fill workout"
+                        id="workoutProgressBar">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Water Progress -->
+
+            <div class="progress-item">
+
+                <div class="progress-label">
+
+                    <span>
+                        Water
+                    </span>
+
+                    <span id="waterPercentage">
+                        0%
+                    </span>
+
+                </div>
+
+                <div class="progress-bar">
+
+                    <div
+                        class="progress-fill water"
+                        id="waterProgressBar">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Recent Activities -->
+
+        <section class="recent-activities">
+
+            <h2>
+                Recent Activities
+            </h2>
+
+            <p class="recent-description">
+                Your latest fitness activities.
+            </p>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Exercise
+                            </th>
+
+                            <th>
+                                Duration
+                            </th>
+
+                            <th>
+                                Calories
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="recentActivityBody">
+
+                        <tr>
+
+                            <td colspan="4">
+                                Loading activities...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <p id="recentActivityMessage"></p>
+
+            <a
+                href="history.html"
+                class="view-history-button">
+
+                View Full History →
+
+            </a>
+
+        </section>
+
+
+        <!-- Quick Action -->
+
+        <section class="quick-action">
+
+            <h2>
+                Ready for today's workout?
+            </h2>
+
+            <p>
+                Add your latest fitness activity.
+            </p>
+
+            <a
+                href="add-activity.html"
+                class="add-button">
+
+                + Add Activity
+
+            </a>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- Firebase -->
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script src="js/firebase.js"></script>
+
+    <script src="js/dashboard.js"></script>
+
+
+    <!-- Logout -->
+
+    <script>
+
+        document
+            .getElementById("logoutBtn")
+            .addEventListener(
+                "click",
+                async function () {
+
+                    try {
+
+                        await firebase
+                            .auth()
+                            .signOut();
+
+                        window.location.href =
+                            "login.html";
+
+                    } catch (error) {
+
+                        console.error(
+                            "Logout error:",
+                            error
+                        );
+
+                        alert(
+                            "Unable to logout. Please try again."
+                        );
+
+                    }
+
+                }
+            );
+
+    </script>
+
+
+</body>
+
+</html>

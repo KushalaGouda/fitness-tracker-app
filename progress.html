@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fitness Progress</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            💪 Fitness Tracker
+        </div>
+
+        <div class="nav-links">
+
+            <a href="index.html">
+                Dashboard
+            </a>
+
+            <a href="add-activity.html">
+                Add Activity
+            </a>
+
+            <a href="progress.html">
+                Progress
+            </a>
+
+            <a href="history.html">
+                History
+            </a>
+
+            <a href="profile.html">
+                Profile
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Progress Page -->
+
+    <main class="progress-container">
+
+        <div class="progress-header">
+
+            <h1>Your Fitness Progress 📊</h1>
+
+            <p>
+                Track your fitness performance over the last 7 days.
+            </p>
+
+        </div>
+
+
+        <!-- Statistics -->
+
+        <section class="progress-stats">
+
+            <div class="progress-card">
+
+                <div class="progress-icon">
+                    👟
+                </div>
+
+                <h3>Total Steps</h3>
+
+                <h2 id="totalSteps">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="progress-card">
+
+                <div class="progress-icon">
+                    🔥
+                </div>
+
+                <h3>Total Calories</h3>
+
+                <h2 id="totalCalories">
+                    0 kcal
+                </h2>
+
+            </div>
+
+
+            <div class="progress-card">
+
+                <div class="progress-icon">
+                    🏃
+                </div>
+
+                <h3>Total Workout</h3>
+
+                <h2 id="totalWorkout">
+                    0 min
+                </h2>
+
+            </div>
+
+
+            <div class="progress-card">
+
+                <div class="progress-icon">
+                    💧
+                </div>
+
+                <h3>Total Water</h3>
+
+                <h2 id="totalWater">
+                    0 L
+                </h2>
+
+            </div>
+
+        </section>
+
+
+        <!-- Chart -->
+
+        <section class="chart-section">
+
+            <h2>Workout Progress</h2>
+<p>
+    Your workout duration for each day of the last 7 days.
+</p>
+            
+
+            <div class="chart-container">
+
+                <canvas id="workoutChart"></canvas>
+
+            </div>
+
+        </section>
+
+
+        <!-- Weekly Summary -->
+
+        <section class="weekly-section">
+
+    <h2>
+        Progress Summary
+    </h2>
+
+    <div id="progressSummary">
+        Loading progress summary...
+    </div>
+
+</section>
+
+    </main>
+
+
+    <!-- Firebase -->
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+
+    <!-- Chart.js -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <!-- Firebase Configuration -->
+
+    <script src="js/firebase.js"></script>
+
+
+    <!-- Progress JavaScript -->
+
+    <script src="js/progress.js"></script>
+
+</body>
+
+</html>

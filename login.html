@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login - Fitness Tracker</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- Login Page -->
+
+    <main class="login-container">
+
+        <div class="login-box">
+
+
+            <!-- Logo / Title -->
+
+            <div class="login-header">
+
+                <div class="login-icon">
+                    💪
+                </div>
+
+                <h1>
+                    Fitness Tracker
+                </h1>
+
+                <p>
+                    Login to track your fitness
+                </p>
+
+            </div>
+
+
+            <!-- Login Form -->
+
+            <form id="loginForm">
+
+
+                <div class="form-group">
+
+                    <label for="loginEmail">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Login
+                </button>
+
+
+            </form>
+
+
+            <!-- Signup Form -->
+
+            <div class="signup-section">
+
+                <p>
+                    Don't have an account?
+                </p>
+
+                <button
+                    type="button"
+                    id="showSignupBtn"
+                    class="signup-link"
+                >
+                    Create Account
+                </button>
+
+            </div>
+
+
+            <!-- Signup -->
+
+            <form
+                id="signupForm"
+                style="display: none;"
+            >
+
+
+                <div class="form-group">
+
+                    <label for="signupEmail">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="signupEmail"
+                        placeholder="Enter your email"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="signupPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        placeholder="Create a password"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Create Account
+                </button>
+
+
+                <button
+                    type="button"
+                    id="showLoginBtn"
+                    class="back-login-button"
+                >
+                    Back to Login
+                </button>
+
+
+            </form>
+
+
+            <!-- Message -->
+
+            <p id="loginMessage"></p>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- Firebase -->
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+
+    <!-- Firebase Configuration -->
+
+    <script src="js/firebase.js"></script>
+
+
+    <!-- Login JavaScript -->
+
+    <script src="js/login.js"></script>
+
+
+</body>
+
+</html>

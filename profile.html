@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            💪 Fitness Tracker
+        </div>
+
+        <div class="nav-links">
+
+            <a href="index.html">
+                Dashboard
+            </a>
+
+            <a href="add-activity.html">
+                Add Activity
+            </a>
+
+            <a href="progress.html">
+                Progress
+            </a>
+
+            <a href="history.html">
+                History
+            </a>
+
+            <a href="profile.html">
+                Profile
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Profile Page -->
+
+    <main class="profile-container">
+
+        <div class="profile-box">
+
+            <h1>My Profile 👤</h1>
+
+            <p class="profile-description">
+                Enter your personal information and daily fitness goals.
+            </p>
+
+
+            <form id="profileForm">
+
+
+                <!-- Name -->
+
+                <div class="form-group">
+
+                    <label for="profileName">
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="profileName"
+                        placeholder="Enter your name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="profileEmail">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="profileEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Age -->
+
+                <div class="form-group">
+
+                    <label for="profileAge">
+                        Age
+                    </label>
+
+                    <input
+                        type="number"
+                        id="profileAge"
+                        placeholder="Example: 21"
+                        min="1"
+                        max="120"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Weight -->
+
+                <div class="form-group">
+
+                    <label for="profileWeight">
+                        Weight (kg)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="profileWeight"
+                        placeholder="Example: 60"
+                        min="1"
+                        step="0.1"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Height -->
+
+                <div class="form-group">
+
+                    <label for="profileHeight">
+                        Height (cm)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="profileHeight"
+                        placeholder="Example: 165"
+                        min="1"
+                        step="0.1"
+                        required
+                    >
+
+                </div>
+
+
+                <h2 class="goals-heading">
+                    Daily Fitness Goals 🎯
+                </h2>
+
+
+                <!-- Step Goal -->
+
+                <div class="form-group">
+
+                    <label for="stepGoal">
+                        Daily Step Goal
+                    </label>
+
+                    <input
+                        type="number"
+                        id="stepGoal"
+                        placeholder="Example: 10000"
+                        min="1"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Calorie Goal -->
+
+                <div class="form-group">
+
+                    <label for="calorieGoal">
+                        Daily Calorie Goal (kcal)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="calorieGoal"
+                        placeholder="Example: 600"
+                        min="1"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Workout Goal -->
+
+                <div class="form-group">
+
+                    <label for="workoutGoal">
+                        Daily Workout Goal (minutes)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="workoutGoal"
+                        placeholder="Example: 60"
+                        min="1"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Water Goal -->
+
+                <div class="form-group">
+
+                    <label for="waterGoal">
+                        Daily Water Goal (litres)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="waterGoal"
+                        placeholder="Example: 3"
+                        min="0.1"
+                        step="0.1"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Save Button -->
+
+                <button
+                    type="submit"
+                    class="save-button"
+                >
+                    Save Profile
+                </button>
+
+
+                <!-- Message -->
+
+                <p id="profileMessage"></p>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <!-- Firebase -->
+
+   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script> 
+
+    <!-- Firebase Configuration -->
+
+    <script src="js/firebase.js"></script>
+
+
+    <!-- Profile JavaScript -->
+
+    <script src="js/profile.js"></script>
+
+</body>
+
+</html>
