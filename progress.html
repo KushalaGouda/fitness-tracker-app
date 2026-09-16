@@ -57,11 +57,55 @@
 
             <h1>Your Fitness Progress 📊</h1>
 
-            <p>
-                Track your fitness performance over the last 7 days.
+            <p id="progressPeriodText">
+                Track your fitness performance.
             </p>
 
         </div>
+
+
+        <!-- Week Selector -->
+
+        <section
+            style="
+                margin-bottom: 25px;
+                text-align: right;
+            "
+        >
+
+            <label
+                for="weekSelector"
+                style="
+                    font-weight: 600;
+                    margin-right: 10px;
+                "
+            >
+                Select Period:
+            </label>
+
+            <select
+                id="weekSelector"
+                style="
+                    padding: 10px 14px;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 8px;
+                    font-size: 15px;
+                    background: white;
+                    cursor: pointer;
+                "
+            >
+
+                <option value="current">
+                    This Week
+                </option>
+
+                <option value="previous">
+                    Previous Week
+                </option>
+
+            </select>
+
+        </section>
 
 
         <!-- Statistics -->
@@ -134,11 +178,13 @@
 
         <section class="chart-section">
 
-            <h2>Workout Progress</h2>
-<p>
-    Your workout duration for each day of the last 7 days.
-</p>
-            
+            <h2>
+                Workout Progress
+            </h2>
+
+            <p id="chartDescription">
+                Your workout duration for each day.
+            </p>
 
             <div class="chart-container">
 
@@ -153,15 +199,15 @@
 
         <section class="weekly-section">
 
-    <h2>
-        Progress Summary
-    </h2>
+            <h2>
+                Progress Summary
+            </h2>
 
-    <div id="progressSummary">
-        Loading progress summary...
-    </div>
+            <div id="progressSummary">
+                Loading progress summary...
+            </div>
 
-</section>
+        </section>
 
     </main>
 
@@ -170,9 +216,9 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 
     <!-- Chart.js -->
