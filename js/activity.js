@@ -192,8 +192,10 @@ if (editActivityId) {
 // =====================================
 
 // Approximate MET values.
-// These are estimates and can vary
-// depending on intensity and individual factors.
+//
+// These are estimates.
+// Actual calories burned can vary
+// depending on intensity and the person.
 
 const exerciseMET = {
 
@@ -236,7 +238,8 @@ function calculateCalories() {
         );
 
 
-    // If information is missing
+    // Check whether all required
+    // information is available
 
     if (
         !exercise ||
@@ -267,10 +270,14 @@ function calculateCalories() {
         exerciseMET[exercise] || 5.0;
 
 
-    // Standard MET calorie formula:
+    // =====================================
+    // CALORIE FORMULA
+    // =====================================
     //
     // Calories =
     // MET × body weight × time in hours
+    //
+    // This gives an estimated value.
 
     const calories =
         met *
@@ -284,7 +291,7 @@ function calculateCalories() {
         );
 
 
-    // Display calculated calories
+    // Display calories
 
     caloriesInput.value =
         roundedCalories;
@@ -307,7 +314,7 @@ function calculateCalories() {
 
 
 // =====================================
-// CALCULATE WHEN EXERCISE CHANGES
+// RECALCULATE WHEN EXERCISE CHANGES
 // =====================================
 
 exerciseType.addEventListener(
@@ -317,7 +324,7 @@ exerciseType.addEventListener(
 
 
 // =====================================
-// CALCULATE WHEN DURATION CHANGES
+// RECALCULATE WHEN DURATION CHANGES
 // =====================================
 
 durationInput.addEventListener(
@@ -327,7 +334,7 @@ durationInput.addEventListener(
 
 
 // =====================================
-// CALCULATE WHEN WEIGHT CHANGES
+// RECALCULATE WHEN WEIGHT CHANGES
 // =====================================
 
 weightInput.addEventListener(
@@ -898,7 +905,8 @@ async function loadActivityForEdit() {
                     activity.notes || "";
 
 
-                // Recalculate calories if possible
+                // Recalculate calories
+                // using exercise + duration + weight
 
                 calculateCalories();
 
