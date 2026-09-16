@@ -26,6 +26,22 @@ const totalWaterElement =
 const progressSummary =
     document.getElementById("progressSummary");
 
+const weekSelector =
+    document.getElementById("weekSelector");
+
+const progressPeriodText =
+    document.getElementById("progressPeriodText");
+
+const chartDescription =
+    document.getElementById("chartDescription");
+
+
+// =====================================
+// CHART VARIABLE
+// =====================================
+
+let workoutChart = null;
+
 
 // =====================================
 // GET DATE STRING
@@ -58,83 +74,101 @@ function getDateString(date) {
 
 
 // =====================================
-// GET LAST 7 DAYS
+// GET DATE RANGE
 // =====================================
 
-const today =
-    new Date();
+function getDateRange(period) {
 
+    const today =
+        new Date();
 
-const startDate =
-    new Date(today);
-
-
-startDate.setDate(
-    today.getDate() - 6
-);
-
-
-const startDateString =
-    getDateString(
-        startDate
+    today.setHours(
+        0,
+        0,
+        0,
+        0
     );
 
 
-const endDateString =
-    getDateString(
-        today
-    );
+    let startDate =
+        new Date(today);
+
+    let endDate =
+        new Date(today);
 
 
-console.log(
-    "Weekly period:",
-    startDateString,
-    "to",
-    endDateString
-);
+    // =================================
+    // THIS WEEK
+    // =================================
+
+    if (period === "current") {
+
+        // Last 7 days including today
+
+        startDate.setDate(
+            today.getDate() - 6
+        );
+
+    }
+
+
+    // =================================
+    // PREVIOUS WEEK
+    // =================================
+
+    else {
+
+        // Previous 7 days
+
+        endDate.setDate(
+            today.getDate() - 7
+        );
+
+        startDate.setDate(
+            today.getDate() - 13
+        );
+
+    }
+
+
+    return {
+
+        startDate:
+            getDateString(
+                startDate
+            ),
+
+        endDate:
+            getDateString(
+                endDate
+            )
+
+    };
+
+}
 
 
 // =====================================
-// CREATE 7-DAY DATA
+// FORMAT DISPLAY DATE
 // =====================================
 
-const last7Days = [];
-
-const dailyWorkout = {};
-
-
-// Create all 7 days first
-
-for (
-    let i = 0;
-    i < 7;
-    i++
+function formatDisplayDate(
+    dateString
 ) {
 
     const date =
         new Date(
-            startDate
+            dateString +
+            "T00:00:00"
         );
 
-
-    date.setDate(
-        startDate.getDate() + i
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            month: "short",
+            day: "numeric"
+        }
     );
-
-
-    const dateString =
-        getDateString(
-            date
-        );
-
-
-    last7Days.push(
-        dateString
-    );
-
-
-    dailyWorkout[dateString] =
-        0;
 
 }
 
@@ -144,10 +178,61 @@ for (
 // =====================================
 
 async function loadProgress(
-    userId
+    userId,
+    period
 ) {
 
     try {
+
+        // =====================================
+        // GET SELECTED DATE RANGE
+        // =====================================
+
+        const dateRange =
+            getDateRange(
+                period
+            );
+
+
+        const startDateString =
+            dateRange.startDate;
+
+        const endDateString =
+            dateRange.endDate;
+
+
+        console.log(
+            "Selected period:",
+            startDateString,
+            "to",
+            endDateString
+        );
+
+
+        // =====================================
+        // UPDATE PAGE TEXT
+        // =====================================
+
+        if (
+            period === "current"
+        ) {
+
+            progressPeriodText.textContent =
+                `Track your fitness performance from ${formatDisplayDate(startDateString)} to ${formatDisplayDate(endDateString)}.`;
+
+            chartDescription.textContent =
+                "Your workout duration for each day of this week.";
+
+        } else {
+
+            progressPeriodText.textContent =
+                `Track your fitness performance from ${formatDisplayDate(startDateString)} to ${formatDisplayDate(endDateString)}.`;
+
+            chartDescription.textContent =
+                "Your workout duration for each day of the previous week.";
+
+        }
+
 
         // =====================================
         // DEFAULT GOALS
@@ -156,14 +241,11 @@ async function loadProgress(
         let stepGoal =
             10000;
 
-
         let calorieGoal =
             600;
 
-
         let workoutGoal =
             60;
-
 
         let waterGoal =
             3;
@@ -241,6 +323,60 @@ async function loadProgress(
 
 
         // =====================================
+        // CREATE SELECTED 7-DAY DATA
+        // =====================================
+
+        const selectedDays = [];
+
+        const dailyWorkout = {};
+
+
+        const startDate =
+            new Date(
+                startDateString +
+                "T00:00:00"
+            );
+
+
+        // Create all 7 days
+
+        for (
+            let i = 0;
+            i < 7;
+            i++
+        ) {
+
+            const date =
+                new Date(
+                    startDate
+                );
+
+
+            date.setDate(
+                startDate.getDate() +
+                i
+            );
+
+
+            const dateString =
+                getDateString(
+                    date
+                );
+
+
+            selectedDays.push(
+                dateString
+            );
+
+
+            dailyWorkout[
+                dateString
+            ] = 0;
+
+        }
+
+
+        // =====================================
         // GET THIS USER'S ACTIVITIES
         // =====================================
 
@@ -264,16 +400,16 @@ async function loadProgress(
         let totalSteps =
             0;
 
-
         let totalCalories =
             0;
-
 
         let totalWorkout =
             0;
 
-
         let totalWater =
+            0;
+
+        let activityCount =
             0;
 
 
@@ -292,17 +428,22 @@ async function loadProgress(
                     activity.date;
 
 
-                // Only activities
-                // from the last 7 days
+                // Only selected period
 
                 if (
                     activityDate >=
                     startDateString &&
+
                     activityDate <=
                     endDateString
                 ) {
 
-                    // Steps
+                    activityCount++;
+
+
+                    // =========================
+                    // STEPS
+                    // =========================
 
                     totalSteps +=
                         Number(
@@ -311,7 +452,9 @@ async function loadProgress(
                         0;
 
 
-                    // Calories
+                    // =========================
+                    // CALORIES
+                    // =========================
 
                     totalCalories +=
                         Number(
@@ -320,7 +463,9 @@ async function loadProgress(
                         0;
 
 
-                    // Workout
+                    // =========================
+                    // WORKOUT
+                    // =========================
 
                     totalWorkout +=
                         Number(
@@ -329,7 +474,9 @@ async function loadProgress(
                         0;
 
 
-                    // Water
+                    // =========================
+                    // WATER
+                    // =========================
 
                     totalWater +=
                         Number(
@@ -338,8 +485,9 @@ async function loadProgress(
                         0;
 
 
-                    // Daily workout
-                    // for graph
+                    // =========================
+                    // DAILY WORKOUT
+                    // =========================
 
                     if (
                         dailyWorkout.hasOwnProperty(
@@ -429,7 +577,7 @@ async function loadProgress(
             0;
 
 
-        last7Days.forEach(
+        selectedDays.forEach(
             function (date) {
 
                 if (
@@ -450,10 +598,7 @@ async function loadProgress(
         // =====================================
 
         if (
-            totalSteps === 0 &&
-            totalCalories === 0 &&
-            totalWorkout === 0 &&
-            totalWater === 0
+            activityCount === 0
         ) {
 
             progressSummary.innerHTML = `
@@ -520,7 +665,7 @@ async function loadProgress(
                 <p class="progress-summary-message">
 
                     No fitness activities recorded
-                    in the last 7 days.
+                    for this period.
 
                 </p>
 
@@ -528,7 +673,7 @@ async function loadProgress(
                 <p>
 
                     Start exercising and your
-                    weekly progress will appear here! 💪
+                    progress will appear here! 💪
 
                 </p>
 
@@ -609,10 +754,10 @@ async function loadProgress(
 
                     You recorded
                     <strong>
-                        ${snapshot.size}
+                        ${activityCount}
                     </strong>
                     activity record(s)
-                    in the last 7 days.
+                    during this period.
 
                 </p>
 
@@ -649,7 +794,7 @@ async function loadProgress(
         const chartWorkoutData = [];
 
 
-        last7Days.forEach(
+        selectedDays.forEach(
             function (date) {
 
                 const dateObject =
@@ -688,7 +833,7 @@ async function loadProgress(
 
 
         // =====================================
-        // CREATE WORKOUT CHART
+        // CREATE / UPDATE WORKOUT CHART
         // =====================================
 
         const chartCanvas =
@@ -697,116 +842,140 @@ async function loadProgress(
             );
 
 
-        new Chart(
-            chartCanvas,
-            {
+        // Destroy old chart
 
-                type:
-                    "bar",
+        if (
+            workoutChart !== null
+        ) {
 
+            workoutChart.destroy();
 
-                data: {
-
-                    labels:
-                        chartLabels,
+        }
 
 
-                    datasets: [
+        workoutChart =
+            new Chart(
+                chartCanvas,
+                {
 
-                        {
-
-                            label:
-                                "Workout Duration (minutes)",
-
-
-                            data:
-                                chartWorkoutData,
+                    type:
+                        "bar",
 
 
-                            borderWidth:
-                                1
+                    data: {
 
-                        }
-
-                    ]
-
-                },
+                        labels:
+                            chartLabels,
 
 
-                options: {
+                        datasets: [
 
-                    responsive:
-                        true,
+                            {
 
-
-                    maintainAspectRatio:
-                        false,
+                                label:
+                                    "Workout Duration (minutes)",
 
 
-                    scales: {
-
-                        y: {
-
-                            beginAtZero:
-                                true,
+                                data:
+                                    chartWorkoutData,
 
 
-                            title: {
+                                borderWidth:
+                                    1
 
-                                display:
+                            }
+
+                        ]
+
+                    },
+
+
+                    options: {
+
+                        responsive:
+                            true,
+
+
+                        maintainAspectRatio:
+                            false,
+
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero:
                                     true,
 
 
-                                text:
-                                    "Minutes"
+                                title: {
+
+                                    display:
+                                        true,
+
+
+                                    text:
+                                        "Minutes"
+
+                                }
+
+                            },
+
+
+                            x: {
+
+                                title: {
+
+                                    display:
+                                        true,
+
+
+                                    text:
+                                        "Date"
+
+                                }
 
                             }
 
                         },
 
 
-                        x: {
+                        plugins: {
 
-                            title: {
+                            legend: {
 
                                 display:
-                                    true,
-
-
-                                text:
-                                    "Date"
+                                    true
 
                             }
-
-                        }
-
-                    },
-
-
-                    plugins: {
-
-                        legend: {
-
-                            display:
-                                true
 
                         }
 
                     }
 
                 }
+            );
 
-            }
+
+        // =====================================
+        // LOG SUCCESS
+        // =====================================
+
+        console.log(
+            "Progress loaded successfully!"
         );
 
 
         console.log(
-            "Weekly progress loaded successfully!"
+            "Selected period:",
+            startDateString,
+            "to",
+            endDateString
         );
 
 
         console.log(
-            "Weekly totals:",
+            "Period totals:",
             {
                 steps:
                     totalSteps,
@@ -818,7 +987,10 @@ async function loadProgress(
                     totalWorkout,
 
                 water:
-                    totalWater
+                    totalWater,
+
+                activities:
+                    activityCount
             }
         );
 
@@ -880,6 +1052,50 @@ function calculatePercentage(
 
 
 // =====================================
+// WEEK SELECTOR
+// =====================================
+
+weekSelector.addEventListener(
+    "change",
+    function () {
+
+        const selectedPeriod =
+            weekSelector.value;
+
+
+        firebase
+            .auth()
+            .currentUser;
+
+
+        const user =
+            firebase
+                .auth()
+                .currentUser;
+
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        // Load selected week
+
+        loadProgress(
+            user.uid,
+            selectedPeriod
+        );
+
+    }
+);
+
+
+// =====================================
 // START PROGRESS PAGE
 // =====================================
 
@@ -902,8 +1118,11 @@ firebase.auth().onAuthStateChanged(
         );
 
 
+        // Default = This Week
+
         loadProgress(
-            user.uid
+            user.uid,
+            "current"
         );
 
     }
