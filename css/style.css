@@ -1069,3 +1069,24 @@ body {
         height: 46px;
     }
 }
+/* =========================================
+   FORGOT PASSWORD BUTTON
+   ========================================= */
+
+.forgot-password-link {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
