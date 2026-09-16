@@ -26,8 +26,8 @@ const totalWaterElement =
 const progressSummary =
     document.getElementById("progressSummary");
 
-const weekSelector =
-    document.getElementById("weekSelector");
+const periodSelector =
+    document.getElementById("periodSelector");
 
 const progressPeriodText =
     document.getElementById("progressPeriodText");
@@ -97,13 +97,13 @@ function getDateRange(period) {
         new Date(today);
 
 
-    // =================================
+    // =====================================
     // THIS WEEK
-    // =================================
+    // =====================================
 
-    if (period === "current") {
-
-        // Last 7 days including today
+    if (
+        period === "thisWeek"
+    ) {
 
         startDate.setDate(
             today.getDate() - 6
@@ -112,13 +112,13 @@ function getDateRange(period) {
     }
 
 
-    // =================================
+    // =====================================
     // PREVIOUS WEEK
-    // =================================
+    // =====================================
 
-    else {
-
-        // Previous 7 days
+    else if (
+        period === "previousWeek"
+    ) {
 
         endDate.setDate(
             today.getDate() - 7
@@ -127,6 +127,144 @@ function getDateRange(period) {
         startDate.setDate(
             today.getDate() - 13
         );
+
+    }
+
+
+    // =====================================
+    // THIS MONTH
+    // =====================================
+
+    else if (
+        period === "thisMonth"
+    ) {
+
+        startDate =
+            new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                1
+            );
+
+    }
+
+
+    // =====================================
+    // PREVIOUS MONTH
+    // =====================================
+
+    else if (
+        period === "previousMonth"
+    ) {
+
+        startDate =
+            new Date(
+                today.getFullYear(),
+                today.getMonth() - 1,
+                1
+            );
+
+        endDate =
+            new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                0
+            );
+
+    }
+
+
+    // =====================================
+    // LAST 3 MONTHS
+    // =====================================
+
+    else if (
+        period === "last3Months"
+    ) {
+
+        startDate =
+            new Date(
+                today.getFullYear(),
+                today.getMonth() - 2,
+                1
+            );
+
+    }
+
+
+    // =====================================
+    // LAST 6 MONTHS
+    // =====================================
+
+    else if (
+        period === "last6Months"
+    ) {
+
+        startDate =
+            new Date(
+                today.getFullYear(),
+                today.getMonth() - 5,
+                1
+            );
+
+    }
+
+
+    // =====================================
+    // THIS YEAR
+    // =====================================
+
+    else if (
+        period === "thisYear"
+    ) {
+
+        startDate =
+            new Date(
+                today.getFullYear(),
+                0,
+                1
+            );
+
+    }
+
+
+    // =====================================
+    // PREVIOUS YEAR
+    // =====================================
+
+    else if (
+        period === "previousYear"
+    ) {
+
+        startDate =
+            new Date(
+                today.getFullYear() - 1,
+                0,
+                1
+            );
+
+        endDate =
+            new Date(
+                today.getFullYear() - 1,
+                11,
+                31
+            );
+
+    }
+
+
+    // =====================================
+    // ALL TIME
+    // =====================================
+
+    else if (
+        period === "allTime"
+    ) {
+
+        return {
+            startDate: null,
+            endDate: null
+        };
 
     }
 
@@ -149,12 +287,17 @@ function getDateRange(period) {
 
 
 // =====================================
-// FORMAT DISPLAY DATE
+// FORMAT DATE
 // =====================================
 
 function formatDisplayDate(
     dateString
 ) {
+
+    if (!dateString) {
+        return "";
+    }
+
 
     const date =
         new Date(
@@ -162,13 +305,117 @@ function formatDisplayDate(
             "T00:00:00"
         );
 
+
     return date.toLocaleDateString(
         "en-US",
         {
             month: "short",
-            day: "numeric"
+            day: "numeric",
+            year: "numeric"
         }
     );
+
+}
+
+
+// =====================================
+// GET PERIOD NAME
+// =====================================
+
+function getPeriodName(period) {
+
+    switch (period) {
+
+        case "thisWeek":
+            return "This Week";
+
+        case "previousWeek":
+            return "Previous Week";
+
+        case "thisMonth":
+            return "This Month";
+
+        case "previousMonth":
+            return "Previous Month";
+
+        case "last3Months":
+            return "Last 3 Months";
+
+        case "last6Months":
+            return "Last 6 Months";
+
+        case "thisYear":
+            return "This Year";
+
+        case "previousYear":
+            return "Previous Year";
+
+        case "allTime":
+            return "All Time";
+
+        default:
+            return "This Week";
+
+    }
+
+}
+
+
+// =====================================
+// CREATE DATE LIST
+// =====================================
+
+function createDateList(
+    startDateString,
+    endDateString
+) {
+
+    const dates = [];
+
+
+    if (
+        !startDateString ||
+        !endDateString
+    ) {
+
+        return dates;
+
+    }
+
+
+    let currentDate =
+        new Date(
+            startDateString +
+            "T00:00:00"
+        );
+
+
+    const endDate =
+        new Date(
+            endDateString +
+            "T00:00:00"
+        );
+
+
+    while (
+        currentDate <= endDate
+    ) {
+
+        dates.push(
+            getDateString(
+                currentDate
+            )
+        );
+
+
+        currentDate.setDate(
+            currentDate.getDate() + 1
+        );
+
+    }
+
+
+    return dates;
 
 }
 
@@ -185,7 +432,7 @@ async function loadProgress(
     try {
 
         // =====================================
-        // GET SELECTED DATE RANGE
+        // GET DATE RANGE
         // =====================================
 
         const dateRange =
@@ -201,35 +448,35 @@ async function loadProgress(
             dateRange.endDate;
 
 
+        const periodName =
+            getPeriodName(
+                period
+            );
+
+
         console.log(
             "Selected period:",
+            periodName,
             startDateString,
-            "to",
             endDateString
         );
 
 
         // =====================================
-        // UPDATE PAGE TEXT
+        // PAGE DESCRIPTION
         // =====================================
 
         if (
-            period === "current"
+            period === "allTime"
         ) {
 
             progressPeriodText.textContent =
-                `Track your fitness performance from ${formatDisplayDate(startDateString)} to ${formatDisplayDate(endDateString)}.`;
-
-            chartDescription.textContent =
-                "Your workout duration for each day of this week.";
+                "Track all your recorded fitness activities.";
 
         } else {
 
             progressPeriodText.textContent =
                 `Track your fitness performance from ${formatDisplayDate(startDateString)} to ${formatDisplayDate(endDateString)}.`;
-
-            chartDescription.textContent =
-                "Your workout duration for each day of the previous week.";
 
         }
 
@@ -304,80 +551,8 @@ async function loadProgress(
         }
 
 
-        console.log(
-            "Profile goals loaded:",
-            {
-                steps:
-                    stepGoal,
-
-                calories:
-                    calorieGoal,
-
-                workout:
-                    workoutGoal,
-
-                water:
-                    waterGoal
-            }
-        );
-
-
         // =====================================
-        // CREATE SELECTED 7-DAY DATA
-        // =====================================
-
-        const selectedDays = [];
-
-        const dailyWorkout = {};
-
-
-        const startDate =
-            new Date(
-                startDateString +
-                "T00:00:00"
-            );
-
-
-        // Create all 7 days
-
-        for (
-            let i = 0;
-            i < 7;
-            i++
-        ) {
-
-            const date =
-                new Date(
-                    startDate
-                );
-
-
-            date.setDate(
-                startDate.getDate() +
-                i
-            );
-
-
-            const dateString =
-                getDateString(
-                    date
-                );
-
-
-            selectedDays.push(
-                dateString
-            );
-
-
-            dailyWorkout[
-                dateString
-            ] = 0;
-
-        }
-
-
-        // =====================================
-        // GET THIS USER'S ACTIVITIES
+        // GET USER ACTIVITIES
         // =====================================
 
         const snapshot =
@@ -414,6 +589,29 @@ async function loadProgress(
 
 
         // =====================================
+        // DAILY DATA
+        // =====================================
+
+        const dailyWorkout = {};
+
+        const selectedDays =
+            createDateList(
+                startDateString,
+                endDateString
+            );
+
+
+        selectedDays.forEach(
+            function (date) {
+
+                dailyWorkout[date] =
+                    0;
+
+            }
+        );
+
+
+        // =====================================
         // PROCESS ACTIVITIES
         // =====================================
 
@@ -428,9 +626,29 @@ async function loadProgress(
                     activity.date;
 
 
-                // Only selected period
+                let includeActivity =
+                    false;
+
+
+                // =================================
+                // ALL TIME
+                // =================================
 
                 if (
+                    period === "allTime"
+                ) {
+
+                    includeActivity =
+                        true;
+
+                }
+
+
+                // =================================
+                // DATE RANGE
+                // =================================
+
+                else if (
                     activityDate >=
                     startDateString &&
 
@@ -438,12 +656,22 @@ async function loadProgress(
                     endDateString
                 ) {
 
+                    includeActivity =
+                        true;
+
+                }
+
+
+                // =================================
+                // ADD DATA
+                // =================================
+
+                if (
+                    includeActivity
+                ) {
+
                     activityCount++;
 
-
-                    // =========================
-                    // STEPS
-                    // =========================
 
                     totalSteps +=
                         Number(
@@ -452,20 +680,12 @@ async function loadProgress(
                         0;
 
 
-                    // =========================
-                    // CALORIES
-                    // =========================
-
                     totalCalories +=
                         Number(
                             activity.calories
                         ) ||
                         0;
 
-
-                    // =========================
-                    // WORKOUT
-                    // =========================
 
                     totalWorkout +=
                         Number(
@@ -474,10 +694,6 @@ async function loadProgress(
                         0;
 
 
-                    // =========================
-                    // WATER
-                    // =========================
-
                     totalWater +=
                         Number(
                             activity.water
@@ -485,9 +701,7 @@ async function loadProgress(
                         0;
 
 
-                    // =========================
-                    // DAILY WORKOUT
-                    // =========================
+                    // Daily workout
 
                     if (
                         dailyWorkout.hasOwnProperty(
@@ -538,7 +752,7 @@ async function loadProgress(
 
 
         // =====================================
-        // CALCULATE GOAL PERCENTAGES
+        // GOAL PERCENTAGES
         // =====================================
 
         const stepsPercentage =
@@ -577,7 +791,9 @@ async function loadProgress(
             0;
 
 
-        selectedDays.forEach(
+        Object.keys(
+            dailyWorkout
+        ).forEach(
             function (date) {
 
                 if (
@@ -665,15 +881,15 @@ async function loadProgress(
                 <p class="progress-summary-message">
 
                     No fitness activities recorded
-                    for this period.
+                    for ${periodName.toLowerCase()}.
 
                 </p>
 
 
                 <p>
 
-                    Start exercising and your
-                    progress will appear here! 💪
+                    Add fitness activities to see
+                    your progress here! 💪
 
                 </p>
 
@@ -757,7 +973,7 @@ async function loadProgress(
                         ${activityCount}
                     </strong>
                     activity record(s)
-                    during this period.
+                    for ${periodName.toLowerCase()}.
 
                 </p>
 
@@ -786,54 +1002,345 @@ async function loadProgress(
 
 
         // =====================================
-        // CREATE CHART DATA
+        // CREATE CHART
         // =====================================
 
-        const chartLabels = [];
+        let chartLabels = [];
 
-        const chartWorkoutData = [];
+        let chartWorkoutData = [];
 
 
-        selectedDays.forEach(
-            function (date) {
+        // =====================================
+        // DAILY CHART
+        // =====================================
 
-                const dateObject =
-                    new Date(
-                        date +
-                        "T00:00:00"
+        if (
+            period === "thisWeek" ||
+            period === "previousWeek" ||
+            period === "thisMonth" ||
+            period === "previousMonth"
+        ) {
+
+            selectedDays.forEach(
+                function (date) {
+
+                    const dateObject =
+                        new Date(
+                            date +
+                            "T00:00:00"
+                        );
+
+
+                    const month =
+                        dateObject.toLocaleString(
+                            "en-US",
+                            {
+                                month:
+                                    "short"
+                            }
+                        );
+
+
+                    const day =
+                        dateObject.getDate();
+
+
+                    chartLabels.push(
+                        `${month} ${day}`
                     );
 
 
-                const month =
-                    dateObject.toLocaleString(
+                    chartWorkoutData.push(
+                        dailyWorkout[date] ||
+                        0
+                    );
+
+                }
+            );
+
+
+            chartDescription.textContent =
+                "Workout duration for each day of the selected period.";
+
+        }
+
+
+        // =====================================
+        // MONTHLY CHART
+        // =====================================
+
+        else if (
+            period === "last3Months" ||
+            period === "last6Months" ||
+            period === "thisYear" ||
+            period === "previousYear"
+        ) {
+
+            const monthlyWorkout = {};
+
+            const monthlyLabels = {};
+
+
+            snapshot.forEach(
+                function (doc) {
+
+                    const activity =
+                        doc.data();
+
+
+                    const activityDate =
+                        activity.date;
+
+
+                    let includeActivity =
+                        false;
+
+
+                    if (
+                        period === "previousYear"
+                    ) {
+
+                        includeActivity =
+                            activityDate >=
+                            startDateString &&
+                            activityDate <=
+                            endDateString;
+
+                    } else {
+
+                        includeActivity =
+                            activityDate >=
+                            startDateString &&
+                            activityDate <=
+                            endDateString;
+
+                    }
+
+
+                    if (
+                        includeActivity
+                    ) {
+
+                        const monthKey =
+                            activityDate.substring(
+                                0,
+                                7
+                            );
+
+
+                        if (
+                            !monthlyWorkout[
+                                monthKey
+                            ]
+                        ) {
+
+                            monthlyWorkout[
+                                monthKey
+                            ] = 0;
+
+                        }
+
+
+                        monthlyWorkout[
+                            monthKey
+                        ] +=
+                            Number(
+                                activity.duration
+                            ) ||
+                            0;
+
+                    }
+
+                }
+            );
+
+
+            const startMonth =
+                new Date(
+                    startDateString +
+                    "T00:00:00"
+                );
+
+
+            const endMonth =
+                new Date(
+                    endDateString +
+                    "T00:00:00"
+                );
+
+
+            let currentMonth =
+                new Date(
+                    startMonth.getFullYear(),
+                    startMonth.getMonth(),
+                    1
+                );
+
+
+            while (
+                currentMonth <= endMonth
+            ) {
+
+                const monthKey =
+                    `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, "0")}`;
+
+
+                const monthLabel =
+                    currentMonth.toLocaleString(
                         "en-US",
                         {
                             month:
-                                "short"
+                                "short",
+                            year:
+                                "numeric"
                         }
                     );
 
 
-                const day =
-                    dateObject.getDate();
-
-
                 chartLabels.push(
-                    `${month} ${day}`
+                    monthLabel
                 );
 
 
                 chartWorkoutData.push(
-                    dailyWorkout[date] ||
+                    monthlyWorkout[
+                        monthKey
+                    ] ||
                     0
                 );
 
+
+                currentMonth.setMonth(
+                    currentMonth.getMonth() + 1
+                );
+
             }
-        );
+
+
+            chartDescription.textContent =
+                "Total workout duration for each month.";
+
+        }
 
 
         // =====================================
-        // CREATE / UPDATE WORKOUT CHART
+        // ALL TIME CHART
+        // =====================================
+
+        else if (
+            period === "allTime"
+        ) {
+
+            const monthlyWorkout = {};
+
+
+            snapshot.forEach(
+                function (doc) {
+
+                    const activity =
+                        doc.data();
+
+
+                    const activityDate =
+                        activity.date;
+
+
+                    if (
+                        activityDate
+                    ) {
+
+                        const monthKey =
+                            activityDate.substring(
+                                0,
+                                7
+                            );
+
+
+                        if (
+                            !monthlyWorkout[
+                                monthKey
+                            ]
+                        ) {
+
+                            monthlyWorkout[
+                                monthKey
+                            ] = 0;
+
+                        }
+
+
+                        monthlyWorkout[
+                            monthKey
+                        ] +=
+                            Number(
+                                activity.duration
+                            ) ||
+                            0;
+
+                    }
+
+                }
+            );
+
+
+            const monthKeys =
+                Object.keys(
+                    monthlyWorkout
+                ).sort();
+
+
+            monthKeys.forEach(
+                function (monthKey) {
+
+                    const parts =
+                        monthKey.split(
+                            "-"
+                        );
+
+
+                    const date =
+                        new Date(
+                            Number(parts[0]),
+                            Number(parts[1]) - 1,
+                            1
+                        );
+
+
+                    const label =
+                        date.toLocaleString(
+                            "en-US",
+                            {
+                                month:
+                                    "short",
+                                year:
+                                    "numeric"
+                            }
+                        );
+
+
+                    chartLabels.push(
+                        label
+                    );
+
+
+                    chartWorkoutData.push(
+                        monthlyWorkout[
+                            monthKey
+                        ]
+                    );
+
+                }
+            );
+
+
+            chartDescription.textContent =
+                "Total workout duration for each month.";
+
+        }
+
+
+        // =====================================
+        // CREATE / UPDATE CHART
         // =====================================
 
         const chartCanvas =
@@ -841,8 +1348,6 @@ async function loadProgress(
                 "workoutChart"
             );
 
-
-        // Destroy old chart
 
         if (
             workoutChart !== null
@@ -931,7 +1436,7 @@ async function loadProgress(
 
 
                                     text:
-                                        "Date"
+                                        "Date / Month"
 
                                 }
 
@@ -958,7 +1463,7 @@ async function loadProgress(
 
 
         // =====================================
-        // LOG SUCCESS
+        // SUCCESS LOG
         // =====================================
 
         console.log(
@@ -967,16 +1472,11 @@ async function loadProgress(
 
 
         console.log(
-            "Selected period:",
-            startDateString,
-            "to",
-            endDateString
-        );
-
-
-        console.log(
             "Period totals:",
             {
+                period:
+                    periodName,
+
                 steps:
                     totalSteps,
 
@@ -1052,21 +1552,12 @@ function calculatePercentage(
 
 
 // =====================================
-// WEEK SELECTOR
+// PERIOD SELECTOR
 // =====================================
 
-weekSelector.addEventListener(
+periodSelector.addEventListener(
     "change",
     function () {
-
-        const selectedPeriod =
-            weekSelector.value;
-
-
-        firebase
-            .auth()
-            .currentUser;
-
 
         const user =
             firebase
@@ -1084,7 +1575,9 @@ weekSelector.addEventListener(
         }
 
 
-        // Load selected week
+        const selectedPeriod =
+            periodSelector.value;
+
 
         loadProgress(
             user.uid,
@@ -1118,11 +1611,15 @@ firebase.auth().onAuthStateChanged(
         );
 
 
-        // Default = This Week
+        // Default selection
+
+        periodSelector.value =
+            "thisWeek";
+
 
         loadProgress(
             user.uid,
-            "current"
+            "thisWeek"
         );
 
     }
