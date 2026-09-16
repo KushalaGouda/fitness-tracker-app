@@ -323,9 +323,9 @@ signupForm.addEventListener(
 
             setTimeout(
                 function () {
-
-                    window.location.href =
-                        "index.html";
+window.location.href =
+    "profile.html";
+                   
 
                 },
                 700
