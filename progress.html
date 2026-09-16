@@ -64,7 +64,7 @@
         </div>
 
 
-        <!-- Week Selector -->
+        <!-- Period Selector -->
 
         <section
             style="
@@ -74,7 +74,7 @@
         >
 
             <label
-                for="weekSelector"
+                for="periodSelector"
                 style="
                     font-weight: 600;
                     margin-right: 10px;
@@ -84,7 +84,7 @@
             </label>
 
             <select
-                id="weekSelector"
+                id="periodSelector"
                 style="
                     padding: 10px 14px;
                     border: 1px solid #cbd5e1;
@@ -95,12 +95,40 @@
                 "
             >
 
-                <option value="current">
+                <option value="thisWeek">
                     This Week
                 </option>
 
-                <option value="previous">
+                <option value="previousWeek">
                     Previous Week
+                </option>
+
+                <option value="thisMonth">
+                    This Month
+                </option>
+
+                <option value="previousMonth">
+                    Previous Month
+                </option>
+
+                <option value="last3Months">
+                    Last 3 Months
+                </option>
+
+                <option value="last6Months">
+                    Last 6 Months
+                </option>
+
+                <option value="thisYear">
+                    This Year
+                </option>
+
+                <option value="previousYear">
+                    Previous Year
+                </option>
+
+                <option value="allTime">
+                    All Time
                 </option>
 
             </select>
@@ -183,7 +211,7 @@
             </h2>
 
             <p id="chartDescription">
-                Your workout duration for each day.
+                Your workout duration.
             </p>
 
             <div class="chart-container">
@@ -195,7 +223,7 @@
         </section>
 
 
-        <!-- Weekly Summary -->
+        <!-- Progress Summary -->
 
         <section class="weekly-section">
 
