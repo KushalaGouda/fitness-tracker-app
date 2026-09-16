@@ -17,6 +17,7 @@ firebase.auth().onAuthStateChanged(
         if (!user) {
 
             // User is not logged in
+
             window.location.href =
                 "login.html";
 
@@ -139,6 +140,36 @@ const saveButton =
     );
 
 
+const exerciseType =
+    document.getElementById(
+        "exerciseType"
+    );
+
+
+const durationInput =
+    document.getElementById(
+        "duration"
+    );
+
+
+const weightInput =
+    document.getElementById(
+        "weight"
+    );
+
+
+const caloriesInput =
+    document.getElementById(
+        "calories"
+    );
+
+
+const calorieMessage =
+    document.getElementById(
+        "calorieMessage"
+    );
+
+
 console.log(
     "Activity form elements loaded!"
 );
@@ -154,6 +185,155 @@ if (editActivityId) {
         "Update Activity";
 
 }
+
+
+// =====================================
+// CALORIE ESTIMATION
+// =====================================
+
+// Approximate MET values.
+// These are estimates and can vary
+// depending on intensity and individual factors.
+
+const exerciseMET = {
+
+    "Walking": 3.5,
+
+    "Running": 9.8,
+
+    "Cycling": 7.5,
+
+    "Swimming": 8.0,
+
+    "Gym": 6.0,
+
+    "Yoga": 3.0,
+
+    "Other": 5.0
+
+};
+
+
+// =====================================
+// CALCULATE ESTIMATED CALORIES
+// =====================================
+
+function calculateCalories() {
+
+    const exercise =
+        exerciseType.value;
+
+
+    const duration =
+        Number(
+            durationInput.value
+        );
+
+
+    const weight =
+        Number(
+            weightInput.value
+        );
+
+
+    // If information is missing
+
+    if (
+        !exercise ||
+        duration <= 0 ||
+        weight <= 0
+    ) {
+
+        caloriesInput.value =
+            "";
+
+
+        calorieMessage.textContent =
+            "Select an exercise and enter duration and weight.";
+
+
+        calorieMessage.style.color =
+            "#64748b";
+
+
+        return;
+
+    }
+
+
+    // Get MET value
+
+    const met =
+        exerciseMET[exercise] || 5.0;
+
+
+    // Standard MET calorie formula:
+    //
+    // Calories =
+    // MET × body weight × time in hours
+
+    const calories =
+        met *
+        weight *
+        (duration / 60);
+
+
+    const roundedCalories =
+        Math.round(
+            calories
+        );
+
+
+    // Display calculated calories
+
+    caloriesInput.value =
+        roundedCalories;
+
+
+    calorieMessage.textContent =
+        `Estimated calories for ${exercise}: approximately ${roundedCalories} kcal.`;
+
+
+    calorieMessage.style.color =
+        "green";
+
+
+    console.log(
+        "Estimated calories:",
+        roundedCalories
+    );
+
+}
+
+
+// =====================================
+// CALCULATE WHEN EXERCISE CHANGES
+// =====================================
+
+exerciseType.addEventListener(
+    "change",
+    calculateCalories
+);
+
+
+// =====================================
+// CALCULATE WHEN DURATION CHANGES
+// =====================================
+
+durationInput.addEventListener(
+    "input",
+    calculateCalories
+);
+
+
+// =====================================
+// CALCULATE WHEN WEIGHT CHANGES
+// =====================================
+
+weightInput.addEventListener(
+    "input",
+    calculateCalories
+);
 
 
 // =====================================
@@ -199,6 +379,14 @@ function startActivityPage(user) {
                 Number(
                     document.getElementById(
                         "duration"
+                    ).value
+                );
+
+
+            const weight =
+                Number(
+                    document.getElementById(
+                        "weight"
                     ).value
                 );
 
@@ -263,10 +451,23 @@ function startActivityPage(user) {
             }
 
 
-            if (duration < 0) {
+            if (duration <= 0) {
 
                 message.textContent =
-                    "Workout duration cannot be negative.";
+                    "Workout duration must be greater than 0.";
+
+                message.style.color =
+                    "red";
+
+                return;
+
+            }
+
+
+            if (weight <= 0) {
+
+                message.textContent =
+                    "Please enter your body weight.";
 
                 message.style.color =
                     "red";
@@ -289,10 +490,10 @@ function startActivityPage(user) {
             }
 
 
-            if (calories < 0) {
+            if (calories <= 0) {
 
                 message.textContent =
-                    "Calories cannot be negative.";
+                    "Calories could not be calculated. Please check exercise, duration and weight.";
 
                 message.style.color =
                     "red";
@@ -306,28 +507,6 @@ function startActivityPage(user) {
 
                 message.textContent =
                     "Water intake cannot be negative.";
-
-                message.style.color =
-                    "red";
-
-                return;
-
-            }
-
-
-            // =====================================
-            // MAKE SURE SOME ACTIVITY IS RECORDED
-            // =====================================
-
-            if (
-                duration === 0 &&
-                steps === 0 &&
-                calories === 0 &&
-                water === 0
-            ) {
-
-                message.textContent =
-                    "Please enter at least one fitness activity value.";
 
                 message.style.color =
                     "red";
@@ -354,6 +533,9 @@ function startActivityPage(user) {
 
                 duration:
                     duration,
+
+                weight:
+                    weight,
 
                 steps:
                     steps,
@@ -403,8 +585,10 @@ function startActivityPage(user) {
                             "Activity not found."
                         );
 
+
                         window.location.href =
                             "history.html";
+
 
                         return;
 
@@ -429,8 +613,10 @@ function startActivityPage(user) {
                             "You cannot edit another user's activity."
                         );
 
+
                         window.location.href =
                             "history.html";
+
 
                         return;
 
@@ -534,6 +720,19 @@ function startActivityPage(user) {
                         "activityDate"
                     ).max =
                         todayDate;
+
+
+                    // Reset calorie field
+
+                    caloriesInput.value =
+                        "";
+
+
+                    calorieMessage.textContent =
+                        "Select an exercise and enter duration and weight.";
+
+                    calorieMessage.style.color =
+                        "#64748b";
 
                 }
 
@@ -670,9 +869,15 @@ async function loadActivityForEdit() {
 
 
                 document.getElementById(
+                    "weight"
+                ).value =
+                    activity.weight ?? "";
+
+
+                document.getElementById(
                     "steps"
                 ).value =
-                    activity.steps ?? "";
+                    activity.steps ?? 0;
 
 
                 document.getElementById(
@@ -691,6 +896,11 @@ async function loadActivityForEdit() {
                     "notes"
                 ).value =
                     activity.notes || "";
+
+
+                // Recalculate calories if possible
+
+                calculateCalories();
 
 
                 console.log(
