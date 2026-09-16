@@ -23,6 +23,9 @@ const showSignupBtn =
 const showLoginBtn =
     document.getElementById("showLoginBtn");
 
+const forgotPasswordBtn =
+    document.getElementById("forgotPasswordBtn");
+
 const loginMessage =
     document.getElementById("loginMessage");
 
@@ -64,6 +67,90 @@ showLoginBtn.addEventListener(
 
         loginMessage.textContent =
             "";
+
+    }
+);
+
+
+// =====================================
+// FORGOT PASSWORD
+// =====================================
+
+forgotPasswordBtn.addEventListener(
+    "click",
+    async function () {
+
+        const email =
+            document
+                .getElementById("loginEmail")
+                .value
+                .trim();
+
+
+        // Check whether email was entered
+
+        if (!email) {
+
+            loginMessage.textContent =
+                "Please enter your email address first.";
+
+            loginMessage.style.color =
+                "red";
+
+            document
+                .getElementById("loginEmail")
+                .focus();
+
+            return;
+
+        }
+
+
+        loginMessage.textContent =
+            "Sending password reset email...";
+
+        loginMessage.style.color =
+            "#2563eb";
+
+
+        try {
+
+            await firebase
+                .auth()
+                .sendPasswordResetEmail(
+                    email
+                );
+
+
+            console.log(
+                "Password reset email sent!"
+            );
+
+
+            loginMessage.textContent =
+                "Password reset email sent! Check your inbox.";
+
+            loginMessage.style.color =
+                "green";
+
+
+        } catch (error) {
+
+            console.error(
+                "Password reset error:",
+                error
+            );
+
+
+            loginMessage.textContent =
+                getFirebaseErrorMessage(
+                    error
+                );
+
+            loginMessage.style.color =
+                "red";
+
+        }
 
     }
 );
@@ -311,6 +398,11 @@ function getFirebaseErrorMessage(
         case "auth/network-request-failed":
 
             return "Network error. Please check your internet connection.";
+
+
+        case "auth/unauthorized-continue-uri":
+
+            return "Password reset link configuration error. Please try again later.";
 
 
         default:
